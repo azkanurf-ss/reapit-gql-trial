@@ -1,0 +1,11 @@
+query getAllOfficeName {
+  GetOffices(pageSize: 80, pageNumber: 1) {
+    _embedded {
+      id
+      name
+    }
+    pageNumber
+    pageSize
+    totalCount
+  }
+}

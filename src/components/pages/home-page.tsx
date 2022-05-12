@@ -1,42 +1,114 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import React, { FC } from 'react'
-import { Title, BodyText, PageContainer, PersistantNotification, elMb7 } from '@reapit/elements'
+import { PageContainer } from '@reapit/elements'
+import { reapitConnectBrowserSession } from '../../core/connect-session'
+import { useReapitConnect } from '@reapit/connect-session'
+import { InputGroup, Input, Label, Button } from '@reapit/elements'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
-export const HomePage: FC = () => (
-  <PageContainer>
-    <Title>Welcome To Reapit Foundations</Title>
-    <PersistantNotification className={elMb7} isExpanded intent="success" isInline isFullWidth>
-      You are now authenticated against our sandbox data.
-    </PersistantNotification>
-    <BodyText hasGreyText>
-      Your Reapit connectSession object is available via the useReapitConnect hook and will be automatically refreshed
-      unless you logout. This will provide you with an accessToken and login identity information to authenticate
-      against our plaform APIs. For more on this{' '}
-      <a
-        href="https://developers.reapit.cloud/api-docs//api/web#connect-session"
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        visit here.
-      </a>
-    </BodyText>
-    <BodyText hasGreyText>
-      There is a sample fetch service that pulls Appointment Config Types from Foundations API to demonstrate fetching
-      data using this scaffold, see the &lsquo;Data&rsquo; page in the navigation bar. Naturally you can replace this
-      endpoint in the platform-api file with an API of your choosing from the API explorer in the developer portal. For
-      our API explorer{' '}
-      <a href="https://developers.reapit.cloud/swagger" target="_blank" rel="noreferrer noopener">
-        visit here.
-      </a>
-    </BodyText>
-    <BodyText hasGreyText>
-      Included in the scaffold is the latest version of the Elements UI library. This is the simplest way for you to
-      adhere to the basic style guidelines for Marketplace applications. For more on this{' '}
-      <a href="https://developers.reapit.cloud/api-docs/elements" target="_blank" rel="noreferrer noopener">
-        visit here.{' '}
-      </a>
-      See also the &lsquo;UI&rsquo; page in the navigation bar for examples of how to use Elements components.
-    </BodyText>
-  </PageContainer>
-)
+// import { useGetAllOfficeNameQuery } from '../../generated/graphql'
+// import graphQLRequestClient from '../../platform-api/graphqlClient'
+import { useGetOffice } from '../../platform-api/hooks/useOffice'
+
+export const HomePage: FC = () => {
+  const { connectSession } = useReapitConnect(reapitConnectBrowserSession)
+  // const officeData = useGetOffice(connectSession, { pageSize: 80, pageNumber: 1 })
+  // console.log({ officeData })
+
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      forename: '',
+      surname: '',
+      dob: '',
+      email: '',
+    },
+    onSubmit: (values) => {
+      console.log('halo', { values })
+      alert(JSON.stringify(values, null, 2))
+    },
+    validationSchema: Yup.object({
+      // name: Yup.string().min(2, 'Mininum 2 characters').max(15, 'Maximum 15 characters'),
+      // address: Yup.string().required('Required!'),
+    }),
+  })
+
+  // const officeName = useGetAllOfficeNameQuery(graphQLRequestClient)
+  // console.log({ officeName })
+  // useEffect(() => {
+  //   if (!connectSession) return
+  //   graphQLRequestClient.setHeaders({
+  //     // ...BASE_HEADERS,
+  //     authorization: connectSession.idToken,
+  //     'reapit-connect-token': connectSession.accessToken,
+  //   })
+  // }, [connectSession])
+
+  return (
+    <PageContainer>
+      <form onSubmit={formik.handleSubmit}>
+        <div className="el-mt8 el-flex el-flex-row el-flex-wrap">
+          <InputGroup>
+            <Input
+              id="title"
+              type="text"
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            <Label htmlFor="name">Title</Label>
+          </InputGroup>
+          <InputGroup className="el-ml6">
+            <Input
+              id="forename"
+              type="text"
+              value={formik.values.forename}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            <Label htmlFor="name">Forename</Label>
+          </InputGroup>
+          <InputGroup className="el-ml6">
+            <Input
+              id="surname"
+              type="text"
+              value={formik.values.surname}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            <Label htmlFor="name">Surname</Label>
+          </InputGroup>
+        </div>
+        <div className="el-mt8 el-flex el-flex-row el-flex-wrap">
+          <InputGroup>
+            <Input
+              id="dob"
+              type="date"
+              value={formik.values.dob}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            <Label htmlFor="name">Date Of Birth</Label>
+          </InputGroup>
+          <InputGroup className="el-ml6">
+            <Input
+              id="email"
+              type="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            <Label htmlFor="name">Email</Label>
+          </InputGroup>
+        </div>
+        <Button className="el-mt6" intent="primary" type="submit">
+          Save
+        </Button>
+      </form>
+    </PageContainer>
+  )
+}
 
 export default HomePage

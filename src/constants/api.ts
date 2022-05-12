@@ -6,3 +6,5 @@ export const BASE_HEADERS = {
 export const URLS = {
   CONFIGURATION_APPOINTMENT_TYPES: '/configuration/appointmentTypes',
 }
+
+export const GRAPHQL_ENDPOINT = 'https://graphql.reapit.cloud/graphql'
